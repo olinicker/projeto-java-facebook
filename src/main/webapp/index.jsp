@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>Facebook</title>
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
 	<link rel="stylesheet" href="./css/bootstrap-icons.css">
 </head>
