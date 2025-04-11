@@ -16,7 +16,7 @@ import model.dao.DAOFactory;
 import model.dao.UserDAO;
 
 //Rotas
-@WebServlet(urlPatterns = {"", "/user/create", "/user/update", "/user/delete"})
+@WebServlet(urlPatterns = {"/users", "/user/create", "/user/update", "/user/delete"})
 public class UsersController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -29,73 +29,83 @@ public class UsersController extends HttpServlet {
 		System.out.println(action);
 
 		switch (action) {
-			case "/facebook/": {
+			case "/facebook/users": {
 				// Listagem dos usuários
 				listUsers(req);
 	
 				// Redirecionar para a página de exibição (index)
-				RequestDispatcher rd = req.getRequestDispatcher("index.jsp");
+				RequestDispatcher rd = req.getRequestDispatcher("users.jsp");
 				rd.forward(req, resp);
 				break;
 			}
 			case "/facebook/user/create" : {
-				String userIdStr = req.getParameter("user_id");
-				
-				saveUser(req);
-	
-				// Redireciona para a listagem 
-				resp.sendRedirect("/facebook");
+				createUser(req, resp);
 				break;
 			}
 			
 			case "/facebook/user/update" : {
-				String userIdStr = req.getParameter("userId");
-				int userId = Integer.parseInt(userIdStr);
-			
-				
-				UserDAO dao = DAOFactory.createDAO(UserDAO.class);
-				
-				User user = new User();
-				
-				try {
-					user = dao.findById(userId);
-				} catch (ModelException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				// enviando o usuario, "user" para a pagina /form_user.jsp poder usar
-				req.setAttribute("usuario", user);
-				
-				RequestDispatcher rd = req.getRequestDispatcher("/form_user.jsp");
-				rd.forward(req, resp);
-				
+				updateUser(req, resp);
 				break;
 			}
 			
 			case "/facebook/user/delete" : {
-				
-				String userIdStr = req.getParameter("userId");
-				int userId = Integer.parseInt(userIdStr);
-				
-				UserDAO dao = DAOFactory.createDAO(UserDAO.class);
-				User user = new User(userId);
-					
-				try {
-					dao.delete(user);
-				} catch (ModelException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				// Redireciona para a listagem 
-				resp.sendRedirect("/facebook");
+				deleteUser(req, resp);
 				break;
 			}
 	
 			default:
 				throw new IllegalArgumentException("URL não reconhecida: " + action);
 			}
+	}
+
+	private void createUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String userIdStr = req.getParameter("user_id");
+		
+		saveUser(req);
+
+		// Redireciona para a listagem 
+		resp.sendRedirect("/facebook/users");
+	}
+
+	private void deleteUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String userIdStr = req.getParameter("userId");
+		int userId = Integer.parseInt(userIdStr);
+		
+		UserDAO dao = DAOFactory.createDAO(UserDAO.class);
+		User user = new User(userId);
+			
+		try {
+			dao.delete(user);
+		} catch (ModelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Redireciona para a listagem 
+		resp.sendRedirect("/facebook/users");
+	}
+
+	private void updateUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String userIdStr = req.getParameter("userId");
+		int userId = Integer.parseInt(userIdStr);
+
+		
+		UserDAO dao = DAOFactory.createDAO(UserDAO.class);
+		
+		User user = new User();
+		
+		try {
+			user = dao.findById(userId);
+		} catch (ModelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// enviando o usuario, "user" para a pagina /form_user.jsp poder usar
+		req.setAttribute("usuario", user);
+		
+		RequestDispatcher rd = req.getRequestDispatcher("/form_user.jsp");
+		rd.forward(req, resp);
 	}
 
 	private void listUsers(HttpServletRequest req) {
@@ -119,6 +129,7 @@ public class UsersController extends HttpServlet {
 		String userName = req.getParameter("user_name");
 		String userGender = req.getParameter("user_gender");
 		String userEmail = req.getParameter("user_email");
+		String userPassword = req.getParameter("user_password");
 		
 		// para saber se é um usuario novo ou não
 		boolean newUser = userIdStr.equals("");
@@ -128,6 +139,7 @@ public class UsersController extends HttpServlet {
 		user.setName(userName);
 		user.setGender(userGender);
 		user.setEmail(userEmail);
+		user.setPassword(userPassword);
 
 		// Salva o usuário no Banco
 		UserDAO dao = DAOFactory.createDAO(UserDAO.class);

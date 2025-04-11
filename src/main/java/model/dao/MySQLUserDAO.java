@@ -5,6 +5,8 @@ import java.util.List;
 
 import model.ModelException;
 import model.User;
+import model.utils.PasswordEncryptor;
+
 
 public class MySQLUserDAO implements UserDAO {
 
@@ -14,13 +16,15 @@ public class MySQLUserDAO implements UserDAO {
 		DBHandler db = new DBHandler();
 		
 		String sqlInsert = "INSERT INTO users VALUES "
-				+ " (DEFAULT, ?, ?, ?);";
+				+ " (DEFAULT, ?, ?, ?, ?);";
+		
+		String password = PasswordEncryptor.hashPassword(user.getPassword());
 		
 		db.prepareStatement(sqlInsert);
 		db.setString(1, user.getName());
 		db.setString(2, user.getGender());
 		db.setString(3, user.getEmail());
-		  
+		db.setString(4, password);	  
 		return db.executeUpdate() > 0;
 	}
 
@@ -33,6 +37,7 @@ public class MySQLUserDAO implements UserDAO {
 				         	+ "SET nome = ?, "
 				         	+ "sexo = ?, "
 				         	+ "email = ? "
+				         	+ "password = ?" 
 				         + "WHERE id = ?";
 		
 		
@@ -41,7 +46,8 @@ public class MySQLUserDAO implements UserDAO {
 		db.setString(1, user.getName());
 		db.setString(2, user.getGender());
 		db.setString(3, user.getEmail());
-		db.setInt(4, user.getId());
+		db.setString(4, user.getPassword());
+		db.setInt(5, user.getId());
 		
 		return db.executeUpdate() > 0;
 	}
@@ -107,6 +113,7 @@ public class MySQLUserDAO implements UserDAO {
 		u.setName(db.getString("nome"));
 		u.setGender(db.getString("sexo"));
 		u.setEmail(db.getString("email"));
+		u.setPassword(db.getString("password"));
 		
 		return u;
 	}

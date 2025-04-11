@@ -47,6 +47,12 @@
 					<input type="email" id="user_email_id" name="user_email"
 						class="form-control" value="${usuario.getEmail()}" >
 				</div>
+				
+				<div class="mb-3">
+					<label for="user_password_id" class="form-label">Password</label>
+					<input type="password" id="user_password_id" name="user_password"
+						class="form-control" value="${usuario.getPassword()}" >
+				</div>
 
 				<button type="submit" class="btn btn-primary">Enviar</button>
 			</form>
