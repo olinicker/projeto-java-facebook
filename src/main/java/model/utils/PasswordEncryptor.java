@@ -22,3 +22,4 @@ public class PasswordEncryptor {
 		return hashPassword(plainTextPassword).equals(hashedPassword);
 	}
 }
+
