@@ -1,56 +1,43 @@
 <jsp:directive.page contentType="text/html; charset=UTF-8" />
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-	<title>Facebook</title>
-	<link rel="stylesheet" href="./css/bootstrap.min.css">
-	<link rel="stylesheet" href="./css/bootstrap-icons.css">
-</head>
-<body>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Facebook CRUD</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap-icons.css">
+  </head>
+  <body>
+	<div class="d-flex flex-column min-vh-100 bg-light">
+		<!-- Navbar -->
+	    <nav class="navbar navbar-dark bg-dark">
+	      <div class="container">
+	        <span class="navbar-brand mb-0 h1">Facebook CRUD</span>
+	        <a href="/facebook/logout" class="btn btn-warning">
+		    	<i class="bi bi-door-closed"></i> Logout
+		  	</a>
+	      </div>
+	    </nav>
 	
-	<div class="container">
-		<h1>Usuários</h1>
-		<div class="row">
-			<table class="table">
-			  <thead>
-			    <tr>
-			      <th scope="col">ID</th>
-			      <th scope="col">Nome</th>
-			      <th scope="col">Sexo</th>
-			      <th scope="col">E-mail</th>
-			      <th scope="col">Editar</th>
-			      <th scope="col">Remover</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <c:forEach var="usuario" items="${usuarios}">
-				    <tr>
-				      <td>${usuario.getId()}</td>
-				      <td>${usuario.getName()}</td>
-				      <td>${usuario.getGender()}</td>
-				      <td>${usuario.getEmail()}</td>
-				      
-				       <td>
-				       	<a href="${pageContext.request.contextPath}/user/update?userId=${usuario.getId()}" class="bi bi-pencil-square"></a>
-				       </td>
-				       
-				       <td>
-				        <a href="${pageContext.request.contextPath}/user/delete?userId=${usuario.getId()}" class="bi bi-trash"></a>
-				       </td>
-				      
-				    </tr>
-			    </c:forEach>
-			  </tbody>
-			</table>
-			
-			<a href="form_user.jsp" class="btn btn-primary">Novo Usuário</a>
-			
-		</div>
-	</div>	
+	    <!-- Conteúdo principal -->
+	    <main class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
+	      <h1 class="my-4">Bem-vindo ao Facebook CRUD</h1>
+	      <div class="d-flex gap-3 flex-wrap justify-content-center">
+	        <a href="/facebook/users" class="btn btn-secondary btn-lg">Usuários</a>
+	        <a href="#" class="btn btn-secondary btn-lg">Posts</a>
+	      </div>
+	    </main>
 	
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
-</body>
+	    <!-- Rodapé -->
+	    <footer class="bg-dark text-white text-center py-3 mt-auto">
+	      <div class="container">
+	        <p class="mb-0">© 2025 Facebook CRUD. Todos os direitos reservados.</p>
+	      </div>
+	    </footer>
+	</div>
+	
+  </body>
 </html>

@@ -14,12 +14,13 @@ public class MySQLUserDAO implements UserDAO {
 		DBHandler db = new DBHandler();
 		
 		String sqlInsert = "INSERT INTO users VALUES "
-				+ " (DEFAULT, ?, ?, ?);";
+				+ " (DEFAULT, ?, ?, ?, ?);";
 		
 		db.prepareStatement(sqlInsert);
 		db.setString(1, user.getName());
 		db.setString(2, user.getGender());
 		db.setString(3, user.getEmail());
+		db.setString(4, user.getPassword());
 		  
 		return db.executeUpdate() > 0;
 	}
@@ -32,16 +33,21 @@ public class MySQLUserDAO implements UserDAO {
 		String sqlUpdate = "UPDATE users "
 				         	+ "SET nome = ?, "
 				         	+ "sexo = ?, "
-				         	+ "email = ? "
+				         	+ "email = ? ,"
+				         	+ "password = ? "
 				         + "WHERE id = ?";
-		
-		
+
 		db.prepareStatement(sqlUpdate);
 		
+		String password = user.getPassword();
+		if (password == null || password.equals(""))
+			password = this.findById(user.getId()).getPassword();
+
 		db.setString(1, user.getName());
 		db.setString(2, user.getGender());
 		db.setString(3, user.getEmail());
-		db.setInt(4, user.getId());
+		db.setString(4, password);
+		db.setInt(5, user.getId());
 		
 		return db.executeUpdate() > 0;
 	}
@@ -107,6 +113,26 @@ public class MySQLUserDAO implements UserDAO {
 		u.setName(db.getString("nome"));
 		u.setGender(db.getString("sexo"));
 		u.setEmail(db.getString("email"));
+		u.setPassword(db.getString("password"));
+		
+		return u;
+	}
+	
+	@Override
+	public User findByEmail(String email) throws ModelException {
+		DBHandler db = new DBHandler();
+		
+		String sql = "SELECT * FROM users WHERE email = ?";
+		
+		db.prepareStatement(sql);
+		db.setString(1, email);
+		db.executeQuery();
+		
+		User u = null;
+		while (db.next()) {
+			u = createUser(db);
+			break;
+		}
 		
 		return u;
 	}
