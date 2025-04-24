@@ -17,8 +17,15 @@
 			<div class="col-2"></div>
 
 			<form action="/facebook/user/save" method="GET" class="col-8">
-				<h1>Cadastro de Usuário</h1>
-
+			
+				<c:if test="${empty usuario.id}">
+				    <h1 class="mt-4">Cadastrar novo Usuário</h1>
+				</c:if>
+				
+				<c:if test="${not empty usuario.id}">
+				    <h1 class="mt-4">Editar Usuário</h1>
+				</c:if>
+			
 				<input type="hidden" id="user_id" name="user_id"
 					value="${usuario.getId()}" required>
 
